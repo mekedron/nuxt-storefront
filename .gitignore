@@ -12,4 +12,4 @@ dist
 schema.graphql
 __generated__
 .graphqlconfig
-graphql/base-schema.graphql
+graphql/remote-schema.graphql

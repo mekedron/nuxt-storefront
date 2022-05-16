@@ -4,7 +4,7 @@ import {
   generateGraphQLOperations,
   generateGraphQLTypes,
   unlinkGraphQLOperation,
-} from './graphql/codegen/executeCodegenOperations';
+} from './graphql/codegen';
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
@@ -28,15 +28,14 @@ export default defineNuxtConfig({
       await generateGraphQLOperations();
     },
     'builder:watch': async (event, path) => {
-      if (event === 'unlink' && path === 'graphql/base-schema.graphql') {
+      if (event === 'unlink' && path === 'graphql/remote-schema.graphql') {
         await downloadGraphQLSchema();
       }
 
-      if (event === 'unlink' && path.endsWith('types/__generated__/schema.d.ts')) {
-        await generateGraphQLTypes();
-      }
-
-      if (path.endsWith('.graphql')) {
+      if (
+        (event === 'unlink' && path.endsWith('types/__generated__/schema.d.ts')) ||
+        path.endsWith('.graphql')
+      ) {
         await generateGraphQLTypes();
       }
 

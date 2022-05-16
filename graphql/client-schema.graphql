@@ -1,0 +1,4 @@
+# Apollo specific directives used in the project
+directive @client on FIELD
+directive @connection(key: String) on FIELD
+directive @export(as: String!) on FIELD

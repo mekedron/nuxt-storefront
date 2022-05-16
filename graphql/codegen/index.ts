@@ -5,7 +5,7 @@ import { existsSync, unlinkSync } from 'fs';
 type Operation = 'download-schema' | 'generate-operations' | 'generate-types';
 
 async function processGraphQLCodegenConfig(operation: Operation) {
-  const context = await loadContext(`graphql/codegen/${operation}.yml`);
+  const context = await loadContext(`graphql/codegen/config/${operation}.yml`);
   const xmlConfig = context.getConfig();
   await generate(
     {
