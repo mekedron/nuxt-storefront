@@ -1,0 +1,8 @@
+overwrite: true
+schema:
+  - "${GRAPHQL_CODEGEN_SCHEMA_URL}"
+  - "graphql/**/schema.graphql"
+documents: "graphql/**/*.graphql"
+generates:
+  types/__generated__/schema.d.ts:
+    - "typescript"

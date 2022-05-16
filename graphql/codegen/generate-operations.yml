@@ -1,0 +1,20 @@
+overwrite: true
+schema:
+  - "graphql/base-schema.graphql"
+  - "graphql/**/schema.graphql"
+documents: "graphql/**/*.graphql"
+hooks:
+  afterAllFileWrite:
+    - "prettier --write"
+generates:
+  graphql/:
+    preset: "near-operation-file"
+    presetConfig:
+      extension: ".ts"
+      folder: "__generated__"
+      baseTypesPath: "~types/__generated__/schema.d"
+    plugins:
+      - "typescript-operations"
+      - "typescript-vue-apollo"
+    config:
+      maybeValue: "T"

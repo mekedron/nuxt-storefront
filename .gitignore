@@ -1,0 +1,15 @@
+.idea
+
+node_modules
+*.log*
+.nitro
+.nuxt-build
+dist
+.cache
+.output
+.env
+
+schema.graphql
+__generated__
+.graphqlconfig
+graphql/base-schema.graphql

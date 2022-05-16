@@ -1,0 +1,5 @@
+query StoreName {
+    storeConfig {
+        store_name
+    }
+}

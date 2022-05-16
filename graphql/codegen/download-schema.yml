@@ -1,0 +1,6 @@
+overwrite: true
+schema: "${GRAPHQL_CODEGEN_SCHEMA_URL}"
+generates:
+  graphql/base-schema.graphql:
+    plugins:
+      - schema-ast
