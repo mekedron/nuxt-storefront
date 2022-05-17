@@ -8,16 +8,18 @@ const proxy = httpProxy.createProxyServer({
 });
 
 export default function (req, res, next) {
+  const config = useRuntimeConfig();
+
   if (
-    !process.env.STOREFRONT_GRAPHQL_BACKEND_URL_PROXY ||
-    !req.url.startsWith(process.env.STOREFRONT_GRAPHQL_BACKEND_PATH)
+    !config.graphqlBackendProxyTo ||
+    !req.url.startsWith(config.public.graphqlBackendPath)
   ) {
     return next();
   }
 
   try {
     proxy.web(req, res, {
-      target: process.env.STOREFRONT_GRAPHQL_BACKEND_URL_PROXY,
+      target: config.graphqlBackendProxyTo,
     });
   } catch (err) {
     console.error(err);

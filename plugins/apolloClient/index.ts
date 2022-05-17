@@ -1,9 +1,14 @@
 import { defineNuxtPlugin } from '#imports';
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core';
+import { ApolloClient, createHttpLink, InMemoryCache, ApolloLink } from '@apollo/client/core';
 import { provideApolloClient } from '@vue/apollo-composable';
+import { getLinks } from '~/plugins/apolloClient/links';
+import typePolicies from '~/plugins/apolloClient/typePolicies';
+import possibleTypes from '~/plugins/apolloClient/__generated__/possibleTypes.json';
 
 export default defineNuxtPlugin((nuxtApp) => {
-  let graphqlBackendUrl = import.meta.env.STOREFRONT_GRAPHQL_BACKEND_URL;
+  const config = useRuntimeConfig();
+
+  let graphqlBackendUrl = config.public.graphqlBackendUrl;
 
   if (!graphqlBackendUrl) {
     graphqlBackendUrl = `http://${
@@ -11,16 +16,18 @@ export default defineNuxtPlugin((nuxtApp) => {
     }`;
   }
 
-  // HTTP connection to the API
-  const httpLink = createHttpLink({
-    // You should use an absolute URL here
-    uri: `${graphqlBackendUrl}${import.meta.env.STOREFRONT_GRAPHQL_BACKEND_PATH}`,
+  const cache = new InMemoryCache({
+    possibleTypes,
+    // @ts-ignore
+    typePolicies,
   });
 
-  const cache = new InMemoryCache();
+  let links: Map<string, ApolloLink> = getLinks(
+    `${graphqlBackendUrl}${config.public.graphqlBackendPath}`
+  );
 
   const apolloClientOptions = {
-    link: httpLink,
+    link: ApolloLink.from([...links.values()]),
     cache,
   };
 

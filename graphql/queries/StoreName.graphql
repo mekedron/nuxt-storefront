@@ -1,5 +1,6 @@
 query StoreName {
     storeConfig {
+        store_code
         store_name
     }
 }

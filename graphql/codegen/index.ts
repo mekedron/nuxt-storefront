@@ -18,14 +18,6 @@ async function processGraphQLCodegenConfig(operation: Operation) {
   );
 }
 
-export async function unlinkGraphQLOperation(graphqlFilePath: string) {
-  const tsFile = graphqlFilePath.replace(/^(.*\/)([^.]+)\.graphql/, '$1__generated__/$2.ts');
-  if (existsSync(tsFile)) {
-    unlinkSync(tsFile);
-  }
-  consola.success(`Removing "${tsFile}"`)
-}
-
 export async function downloadGraphQLSchema() {
   consola.success(`Downloading GraphQL schema...`);
   const start = Date.now();
@@ -61,3 +53,17 @@ export async function generateGraphQLOperations() {
   const time = Date.now() - start;
   consola.success(`GraphQL TypeScript operations generated in ${time}ms`);
 }
+
+export async function unlinkGraphQLOperation(graphqlFilePath: string) {
+  const tsFile = graphqlFilePath.replace(/^(.*\/)([^.]+)\.graphql/, '$1__generated__/$2.ts');
+  if (existsSync(tsFile)) {
+    try {
+      unlinkSync(tsFile);
+    } catch (exception) {
+      consola.error(`Cannot delete ${tsFile}.`);
+    }
+  }
+  consola.success(`Deleting "${tsFile}"`)
+}
+
+export { default as generatePossibleTypes } from './generatePossibleTypes';

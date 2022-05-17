@@ -4,17 +4,38 @@ import {
   generateGraphQLOperations,
   generateGraphQLTypes,
   unlinkGraphQLOperation,
+  generatePossibleTypes,
 } from './graphql/codegen';
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  runtimeConfig: {
+    graphqlBackendProxyTo: 'https://venia.magento.com',
+
+    public: {
+      graphqlBackendUrl: '',
+      graphqlBackendPath: '/graphql',
+    },
+  },
+
+  modules: ['@pinia/nuxt'],
   buildDir: '.nuxt-build',
   dev: process.env.NODE_ENV !== 'production',
+  debug: process.env.NODE_ENV !== 'production',
   vite: {
-    envPrefix: 'STOREFRONT_',
+    envPrefix: 'CLIENT_',
+    build: {
+      sourcemap: true, // no effect
+    },
+  },
+  vue: {
+    compilerOptions: {
+      sourceMap: true, // no effect
+    },
   },
   autoImports: {
     dirs: [
+      'stores',
       'graphql/fragments/__generated__',
       'graphql/queries/__generated__',
       'graphql/mutations/__generated__',
@@ -22,12 +43,17 @@ export default defineNuxtConfig({
     ],
   },
   hooks: {
-    'build:before': async (event, path) => {
+    'build:before': async () => {
       await downloadGraphQLSchema();
       await generateGraphQLTypes();
       await generateGraphQLOperations();
+      await generatePossibleTypes();
     },
     'builder:watch': async (event, path) => {
+      if (event === 'unlink' && path === 'plugins/apolloClient/__generated__/possibleTypes.json') {
+        await downloadGraphQLSchema();
+      }
+
       if (event === 'unlink' && path === 'graphql/remote-schema.graphql') {
         await downloadGraphQLSchema();
       }
@@ -47,7 +73,10 @@ export default defineNuxtConfig({
       ) {
         if (event === 'unlink' && path.endsWith('.graphql')) {
           await unlinkGraphQLOperation(path);
-        } else {
+        } else if (
+          (event === 'change' && path.endsWith('.graphql')) ||
+          (event === 'unlink' && path.endsWith('.ts'))
+        ) {
           await generateGraphQLOperations();
         }
       }
