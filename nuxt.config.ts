@@ -1,3 +1,6 @@
+import Components from 'unplugin-vue-components/vite';
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
+import { createStyleImportPlugin } from 'vite-plugin-style-import';
 import { defineNuxtConfig } from 'nuxt';
 import {
   downloadGraphQLSchema,
@@ -6,11 +9,12 @@ import {
   unlinkGraphQLOperation,
   generatePossibleTypes,
 } from './graphql/codegen';
+import { AntdStyleResolver } from './vite/AntdStyleResolver';
 
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  // environment configuration
   runtimeConfig: {
-    graphqlBackendProxyTo: 'https://venia.magento.com',
+    graphqlBackendProxyTo: 'https://app.nuxt-storefront.test',
 
     public: {
       graphqlBackendUrl: '',
@@ -18,21 +22,50 @@ export default defineNuxtConfig({
     },
   },
 
+  // meta tags
+  meta: {
+    meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
+  },
+
+  components: true,
+
+  // css
+  css: ['~/assets/scss/index.scss'],
+
+  // modules
   modules: ['@pinia/nuxt'],
+
+  // build dir (we need to change it because default .nuxt dir is ignored in WebStorm and cannot be unmarked as ignored)
   buildDir: '.nuxt-build',
-  dev: process.env.NODE_ENV !== 'production',
-  debug: process.env.NODE_ENV !== 'production',
+
+  // bundling
   vite: {
     envPrefix: 'CLIENT_',
-    build: {
-      sourcemap: true, // no effect
+    css: {
+      preprocessorOptions: {
+        less: {
+          javascriptEnabled: true
+        }
+      }
     },
+    plugins: [
+      Components({
+        resolvers: [AntDesignVueResolver(
+          {
+            importStyle: false,
+            cjs: true,
+          }
+        )],
+      }),
+      createStyleImportPlugin({
+        libs: [
+          AntdStyleResolver()
+        ],
+      }),
+    ]
   },
-  vue: {
-    compilerOptions: {
-      sourceMap: true, // no effect
-    },
-  },
+
+  // auto imports
   autoImports: {
     dirs: [
       'stores',
@@ -42,6 +75,8 @@ export default defineNuxtConfig({
       'graphql/subscriptions/__generated__',
     ],
   },
+
+  // hooks
   hooks: {
     'build:before': async () => {
       await downloadGraphQLSchema();

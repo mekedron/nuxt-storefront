@@ -1,5 +1,4 @@
 <script setup>
-
 const { result: customerNameResult } = useCustomerNameQuery(() => ({
   prefetch: true,
 }));
@@ -7,7 +6,7 @@ const { result: customerNameResult } = useCustomerNameQuery(() => ({
 
 <template>
   <div>
-      Full Name: {{ customerNameResult?.customer?.firstname }}
-      {{ customerNameResult?.customer?.lastname }}
+    Full Name: {{ customerNameResult?.customer?.firstname }}
+    {{ customerNameResult?.customer?.lastname }}
   </div>
 </template>

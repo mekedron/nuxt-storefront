@@ -28,12 +28,38 @@ const handleSignOut = async () => {
 };
 </script>
 <template>
-  <div>Token: {{ signInToken }}</div>
-  <div>Store Code: {{ result?.storeConfig?.store_code }}</div>
-  <div>Store Name: {{ result?.storeConfig?.store_name }}</div>
+  <a-layout class="layout">
+    <a-layout-header>
+      <div class="logo" />
+      <a-menu
+        theme="dark"
+        mode="horizontal"
+        :style="{ lineHeight: '64px' }"
+      >
+        <a-menu-item key="1">nav 1</a-menu-item>
+        <a-menu-item key="2">nav 2</a-menu-item>
+        <a-menu-item key="3">nav 3</a-menu-item>
+      </a-menu>
+    </a-layout-header>
+    <a-layout-content style="padding: 0 50px">
+      <a-breadcrumb style="margin: 16px 0">
+        <a-breadcrumb-item>Home</a-breadcrumb-item>
+        <a-breadcrumb-item>List</a-breadcrumb-item>
+        <a-breadcrumb-item>App</a-breadcrumb-item>
+      </a-breadcrumb>
+      <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
+        <div>Token: {{ signInToken }}</div>
+        <div>Store Code: {{ result?.storeConfig?.store_code }}</div>
+        <div>Store Name: {{ result?.storeConfig?.store_name }}</div>
 
-  <CustomerName v-if="isSignedIn" />
+        <CustomerName v-if="isSignedIn" />
 
-  <button @click="handleSignOut" v-if="signInToken">Sign Out</button>
-  <button @click="handleSignIn" v-else>Sign In</button>
+        <a-button type="primary" @click="handleSignOut" v-if="signInToken">Sign Out</a-button>
+        <a-button type="primary" @click="handleSignIn" v-else>Sign In</a-button>
+      </div>
+    </a-layout-content>
+    <a-layout-footer style="text-align: center">
+      Ant Design ©2018 Created by Ant UED
+    </a-layout-footer>
+  </a-layout>
 </template>
