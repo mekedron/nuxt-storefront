@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from '#imports';
-import { ApolloClient, createHttpLink, InMemoryCache, ApolloLink } from '@apollo/client/core';
+import { ApolloClient, InMemoryCache, ApolloLink } from '@apollo/client/core';
 import { provideApolloClient } from '@vue/apollo-composable';
 import { getLinks } from '~/plugins/apolloClient/links';
 import typePolicies from '~/plugins/apolloClient/typePolicies';
@@ -44,7 +44,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       nuxtApp.payload.data['apollo-client'] = apolloClient.extract();
     });
   } else {
-    cache.restore(JSON.parse(JSON.stringify(nuxtApp.payload.data['apollo-client'])));
+    if (nuxtApp.payload.data['apollo-client']) {
+      cache.restore(JSON.parse(JSON.stringify(nuxtApp.payload.data['apollo-client'])));
+    }
 
     apolloClient = new ApolloClient(
       Object.assign({}, apolloClientOptions, {

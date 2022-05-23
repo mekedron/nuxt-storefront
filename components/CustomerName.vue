@@ -1,7 +1,5 @@
 <script setup>
-const { result: customerNameResult } = useCustomerNameQuery(() => ({
-  prefetch: true,
-}));
+const { result: customerNameResult } = useCustomerNameQuery();
 </script>
 
 <template>

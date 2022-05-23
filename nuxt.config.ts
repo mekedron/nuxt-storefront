@@ -1,6 +1,4 @@
 import Components from 'unplugin-vue-components/vite';
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
-import { createStyleImportPlugin } from 'vite-plugin-style-import';
 import { defineNuxtConfig } from 'nuxt';
 import {
   downloadGraphQLSchema,
@@ -9,7 +7,9 @@ import {
   unlinkGraphQLOperation,
   generatePossibleTypes,
 } from './graphql/codegen';
-import { AntdStyleResolver } from './vite/AntdStyleResolver';
+import { AntdComponentResolver } from './vite/AntdComponentResolver';
+
+const lifecycle = process.env.npm_lifecycle_event;
 
 export default defineNuxtConfig({
   // environment configuration
@@ -25,6 +25,7 @@ export default defineNuxtConfig({
   // meta tags
   meta: {
     meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
   },
 
   components: true,
@@ -38,31 +39,34 @@ export default defineNuxtConfig({
   // build dir (we need to change it because default .nuxt dir is ignored in WebStorm and cannot be unmarked as ignored)
   buildDir: '.nuxt-build',
 
+  // building config
+  build: {
+    transpile:
+      lifecycle === 'build' || lifecycle === 'generate'
+        ? ['ant-design-vue', '@apollo/client', '@vue/apollo-composable']
+        : [],
+  },
+
   // bundling
   vite: {
     envPrefix: 'CLIENT_',
+    optimizeDeps: {
+      esbuildOptions: {
+        treeShaking: true,
+      },
+    },
     css: {
       preprocessorOptions: {
         less: {
-          javascriptEnabled: true
-        }
-      }
+          javascriptEnabled: true,
+        },
+      },
     },
     plugins: [
       Components({
-        resolvers: [AntDesignVueResolver(
-          {
-            importStyle: false,
-            cjs: true,
-          }
-        )],
+        resolvers: [AntdComponentResolver()],
       }),
-      createStyleImportPlugin({
-        libs: [
-          AntdStyleResolver()
-        ],
-      }),
-    ]
+    ],
   },
 
   // auto imports

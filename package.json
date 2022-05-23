@@ -13,18 +13,18 @@
     "@graphql-codegen/schema-ast": "^2.4.1",
     "@graphql-codegen/typescript": "^2.4.11",
     "@graphql-codegen/typescript-operations": "^2.4.0",
+    "@graphql-codegen/typescript-vue-apollo": "^3.2.12",
     "eslint": "^8.15.0",
     "less": "^4.1.2",
     "nuxt": "3.0.0-rc.3",
     "prettier": "^2.6.2",
     "sass": "^1.51.0",
-    "unplugin-vue-components": "^0.19.5",
-    "vite-plugin-style-import": "^2.0.0"
+    "unplugin-vue-components": "^0.19.5"
   },
   "dependencies": {
     "@adobe/apollo-link-mutation-queue": "^1.1.0",
+    "@ant-design/icons-vue": "^6.1.0",
     "@apollo/client": "^3.6.4",
-    "@graphql-codegen/typescript-vue-apollo": "^3.2.12",
     "@pinia/nuxt": "^0.1.9",
     "@vue/apollo-composable": "^4.0.0-alpha.17",
     "@vue/composition-api": "^1.6.1",
