@@ -25,10 +25,8 @@ export default defineNuxtConfig({
   // meta tags
   meta: {
     meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-
-  components: true,
 
   // css
   css: ['~/assets/scss/index.scss'],
@@ -39,11 +37,11 @@ export default defineNuxtConfig({
   // build dir (we need to change it because default .nuxt dir is ignored in WebStorm and cannot be unmarked as ignored)
   buildDir: '.nuxt-build',
 
-  // building config
+  // building config! You need to transpile all the necesarry dependerncies to load them properly in production mode
   build: {
     transpile:
       lifecycle === 'build' || lifecycle === 'generate'
-        ? ['ant-design-vue', '@apollo/client', '@vue/apollo-composable']
+        ? ['ant-design-vue', '@ant-design/icons-vue', '@apollo/client', '@vue/apollo-composable']
         : [],
   },
 
@@ -70,6 +68,22 @@ export default defineNuxtConfig({
   },
 
   // auto imports
+  components: [
+    '~/components',
+    {
+      path:'~/node_modules/@ant-design/icons-vue/es/components',
+      pattern: '**/[A-Z]*.js',
+      ignore: ['index.js', 'AntdIcon.js'],
+      prefix: 'a',
+    },
+    {
+      path:'~/node_modules/@ant-design/icons-vue/es/icons',
+      pattern: '**/*.js',
+      ignore: ['index.js'],
+      prefix: 'a-icon',
+    }
+  ],
+
   autoImports: {
     dirs: [
       'stores',

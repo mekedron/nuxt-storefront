@@ -31,11 +31,7 @@ const handleSignOut = async () => {
   <a-layout class="layout">
     <a-layout-header>
       <div class="logo" />
-      <a-menu
-        theme="dark"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-      >
+      <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
         <a-menu-item key="1">nav 1</a-menu-item>
         <a-menu-item key="2">nav 2</a-menu-item>
         <a-menu-item key="3">nav 3</a-menu-item>
@@ -48,14 +44,22 @@ const handleSignOut = async () => {
         <a-breadcrumb-item>App</a-breadcrumb-item>
       </a-breadcrumb>
       <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
-        <div>Token: {{ signInToken }}</div>
+        <div :title="signInToken" :style="{ overflow: 'hidden', textOverflow: 'ellipsis' }">
+          Token: {{ signInToken }}
+        </div>
         <div>Store Code: {{ result?.storeConfig?.store_code }}</div>
         <div>Store Name: {{ result?.storeConfig?.store_name }}</div>
 
         <CustomerName v-if="isSignedIn" />
 
-        <a-button type="primary" @click="handleSignOut" v-if="signInToken">Sign Out</a-button>
-        <a-button type="primary" @click="handleSignIn" v-else>Sign In</a-button>
+        <a-button type="primary" @click="handleSignOut" v-if="signInToken">
+          <a-icon-user-outlined />
+          Sign Out
+        </a-button>
+        <a-button type="primary" @click="handleSignIn" v-else>
+          <a-icon-user-outlined />
+          Sign In
+        </a-button>
       </div>
     </a-layout-content>
     <a-layout-footer style="text-align: center">
